@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deteksi Penyakit Daun Tanaman</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🌿 Deteksi Penyakit Daun Tanaman</h1>
+        <p class="subtitle">Upload foto daun tanaman, sistem akan memprediksi jenis penyakitnya.</p>
+
+        <form action="/predict" method="post" enctype="multipart/form-data" class="upload-form">
+            <input type="file" name="file" accept="image/png, image/jpeg" required>
+            <button type="submit">Deteksi Sekarang</button>
+        </form>
+
+        {% if error %}
+        <div class="alert error">{{ error }}</div>
+        {% endif %}
+
+        {% if result %}
+        <div class="result-card">
+            <img src="{{ result.image_url }}" alt="Gambar diupload" class="preview-img">
+            <div class="result-info">
+                <h2>{{ result.label }}</h2>
+                <p class="confidence">Keyakinan: <strong>{{ result.confidence }}%</strong></p>
+
+                <h3>Kemungkinan lain:</h3>
+                <ul class="top3-list">
+                    {% for item in result.top3 %}
+                    <li>{{ item.label }} — {{ item.confidence }}%</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
